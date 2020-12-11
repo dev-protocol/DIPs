@@ -1,7 +1,3 @@
-# Technical DIP Template
-
-## Preamble
-
 ```
 DIP: <# to be assigned>
 Title: <DIP title>

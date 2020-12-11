@@ -1,7 +1,3 @@
-# General DIP Template
-
-## Preamble
-
 ```
 DIP: 1
 Title: Renew the ratio of holdersShare
