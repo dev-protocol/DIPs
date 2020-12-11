@@ -8,7 +8,7 @@ Status: Finished
 Date Proposed: 2020-6-1
 Date Ratified: 2020-6-1
 Dependencies: n/a
-Replaces: n/a
+Replaces: [TheInitialPolicy](https://github.com/dev-protocol/protocol/blob/221b20b32e6cf9040403b37d64968452d63e419b/contracts/src/policy/TheInitialPolicy.sol)
 ```
 
 ## References
