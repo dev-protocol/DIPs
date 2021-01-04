@@ -1,5 +1,5 @@
 ```
-DIP: <# to be assigned>
+DIP: 39
 Title: Sponsor Program
 Author(s): Scott G <scott@devprotocol.xyz>
 Contributors: aggre (@aggre)
