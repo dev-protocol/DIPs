@@ -1,5 +1,5 @@
 ```
-DIP: <# to be assigned>
+DIP: 38
 Title: Creator Reward Withdrawal Limit
 Author(s): @aggre
 Contributors: -
