@@ -50,6 +50,29 @@ The withdrawal limit per block (`L`) can be calculated as follows:
 
 If ![x](https://latex.codecogs.com/gif.latex?%5Cinline%20%5Cdpi%7B200%7D%20%5Cbg_white%20x_i) is `0`, it is treated as `1`. `1` is `0.000000000000000001` when converted to the token decimals.
 
+### Simulation
+
+The following table simulates how creator rewards are calculated when this DIP is applied and includes the **real** APY assuming an APY of 25%.
+
+As the table shows, intensive staking negatively affects creators by using the geometric mean. In other words, it often makes more sense to stake-to-others than to self-stake.
+
+|                                                                         | Total Staked    | Total Staked'    | Total Staked''  |
+| ----------------------------------------------------------------------- | --------------- | ---------------- | --------------- |
+| Property A                                                              | 1               | 1                | 3               |
+| Property B                                                              | 1               | 1                | 4               |
+| Property C                                                              | 1               | 1                | 2000            |
+| Property D                                                              | 1               | 1                | 2000            |
+| Property E                                                              | 1               | 1                | 2000            |
+| Property F                                                              | 1               | 1                | 2000            |
+| Property G                                                              | 1               | 1                | 2000            |
+| Property H                                                              | 10000           | 20000            | 10000           |
+| Sum                                                                     | 10007           | 20007            | 20007           |
+| **Geometric mean**                                                      | **3.16227766**  | **3.448488241**  | **498.9320504** |
+| **Estimated max annually earn**<br/> when using the geometric mean      | **0.790569415** | **0.8621220603** | **124.7330126** |
+| Arithmetic mean                                                         | 1250.875        | 2500.875         | 2500.875        |
+| Estimated max annually earn<br/> when using the arithmetic mean         | 312.71875       | 625.21875        | 625.21875       |
+| Estimated max annually earn<br/> using current formula (for Property H) | 2500            | 5000             | 2500            |
+
 ## Copyright
 
 Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
