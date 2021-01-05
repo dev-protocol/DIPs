@@ -52,7 +52,7 @@ If ![x](https://latex.codecogs.com/gif.latex?%5Cinline%20%5Cdpi%7B200%7D%20%5Cbg
 
 ### Simulation
 
-The following table simulates how creator rewards are calculated when this DIP is applied and includes the **real** APY assuming an APY of 25%.
+The following table simulates how creator rewards are calculated when this DIP is applied and includes the **effective** APY assuming an APY of 25%.
 
 As the table shows, intensive staking negatively affects creators by using the geometric mean. In other words, it often makes more sense to stake-to-others than to self-stake.
 
