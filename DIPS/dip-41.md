@@ -1,5 +1,5 @@
 ```
-DIP: <# to be assigned>
+DIP: 41
 Title: New Markets & Native APYs
 Author(s): Scott G <scott@devprotocol.xyz>
 Contributors: aggre (@aggre)
