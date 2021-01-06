@@ -2,7 +2,7 @@
 DIP: 38
 Title: Creator Reward Withdrawal Limit
 Author(s): @aggre
-Contributors: -
+Contributors: Scott G <scott@devprotocol.xyz>
 Type: Informational
 Status: Draft
 Date Proposed: 2021-01-02
@@ -29,6 +29,12 @@ This DIP proposes to set a limit per block on a withdrawable amount of creator r
   - Even if a creator or property holder does self-staking to increase his/her creator rewards, he/she will not be able to get a large amount of creator rewards.
     - Because is that the geometric mean cannot be increased efficiently without increasing the number of stakings on many Properties.
   - An efficient way to increase creator rewards is to increase the limit by staking to someone else's Property instead of self-staking.
+- Disabling staking by Property holders
+  - Staking by a wallet account holding a "Property of staking destination" will not increase the creator reward for that Property.
+  - It will be applied if you hold even 1 token (converted to the token decimals is 0.000000000000000001) of that Property.
+    - If the formula reflects the percentage of equity in the token, the bigger holder may ask a smaller holder to do self-staking.
+    - Only the number of Property holdings at the time of staking is used as the applicable condition.
+    - It does not consider if the user holds the Property later or gives it away later.
 
 ## Motivation
 
