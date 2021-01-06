@@ -79,6 +79,44 @@ As the table shows, intensive staking negatively affects creators by using the g
 | Estimated max annually earn<br/> when using the arithmetic mean         | 312.71875       | 625.21875        | 625.21875       |
 | Estimated max annually earn<br/> using current formula (for Property H) | 2500            | 5000             | 2500            |
 
+### Proposed Code Updating
+
+Update the interfaces as follows. Add the required persistence values to the storage contracts as appropriate.
+
+#### MetricsGroup Contract
+
+Add a new function to calculate the number of authenticated Properties.
+
+| Method/Struct                  | Type | Spec                                                  |
+| ------------------------------ | ---- | ----------------------------------------------------- |
+| `totalAuthenticatedProperties` | New  | Returns the number of authenticated unique Properties |
+
+#### Lockup Contract
+
+Recalculate the geometric mean each time the staking increases or decreases.
+
+The latest geometric mean can be referenced by `geometricMeanLockedUp` function.
+
+This DIP does not suggest a method for calculating the geometric mean in EVM.
+
+| Method/Struct                             | Type   | Spec                                                                                                                                                                                                                                                                                                                                                  |
+| ----------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `geometricMeanLockedUp`                   | New    | Returns the latest geometric mean number of staked.                                                                                                                                                                                                                                                                                                   |
+| `lockup`                                  | Change | Update the geometric mean of staking. If the staking account is the target Property holder, add the number of staking to the "disabled lockedups" stored value.                                                                                                                                                                                       |
+| `withdraw`                                | Change | Update the geometric mean of staking. If the "disabled lockedups" stored value is not zero, subtract the number of staking to be unlocked from that value.                                                                                                                                                                                            |
+| `RewardPrices`                            | Change | Add "geometric mean holders price" to the values.                                                                                                                                                                                                                                                                                                     |
+| `calculateCumulativeRewardPrices`         | Change | Add "geometric mean holders price" to the return value. The "geometric mean holders price" is calculated from the ratio of `geometricMeanLockedUp` and `getStorageAllValue`.                                                                                                                                                                          |
+| `_calculateCumulativeHoldersRewardAmount` | Change | Add "geometric mean holders reward" to the arguments. Add "cap by geometric mean" to the return value. The "cap by geometric mean" is calculated from the ratio of `geometricMeanLockedUp` and `getStorageAllValue`. The number of stakings( value of `getStoragePropertyValue(PROPERTY)` ) uses in the calculation deducts the "disabled lockedups." |
+| `calculateEffectiveHoldersRewardAmount`   | New    | Returns the new return value "cap by geometric mean" for `_calculateCumulativeHoldersRewardAmount`.                                                                                                                                                                                                                                                   |
+
+#### Withdraw Contract
+
+When withdrawing creator rewards, do not exceed the withdrawal limit by geometric mean.
+
+| Method/Struct      | Type   | Spec                                                                                                                                                                                                                                                                                                                   |
+| ------------------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `_calculateAmount` | Change | If the original withdrawable amount exceeds the "withdrawal limit," the "withdrawal limit" will be returned. The "withdrawal limit" is calculated by dividing the value of `Lockup.calculateEffectiveHoldersRewardAmount` by the value of `Property.totalSupply` and multiplying by the balance of the passed account. |
+
 ## Copyright
 
 Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
