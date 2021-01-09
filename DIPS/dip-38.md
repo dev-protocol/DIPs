@@ -97,7 +97,7 @@ Recalculate the geometric mean each time the staking increases or decreases.
 
 The latest geometric mean can be referenced by `geometricMeanLockedUp` function.
 
-This DIP does not suggest a method for calculating the geometric mean in EVM.
+_Since a large amount of iterative calculation is indispensable to calculate the geometric mean, a large amount of gas is consumed to calculate the geometric mean with on-chain. Therefore, an oracle will update the geometric mean regularly until a valid complexity reduction plan is found._
 
 | Method/Struct                             | Type   | Spec                                                                                                                                                                                                                                                                                                                                                          |
 | ----------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
