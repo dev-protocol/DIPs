@@ -6,7 +6,7 @@ Contributors: Scott G <scott@devprotocol.xyz>
 Type: Informational
 Status: Draft
 Date Proposed: 2021-01-02
-Date Ratified: <date created on, in ISO 8601 (yyyy-mm-dd) format>
+Date Ratified: 2021-01-18
 Dependencies: -
 Replaces: -
 ```
