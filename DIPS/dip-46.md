@@ -1,5 +1,5 @@
 ```
-DIP: <# to be assigned>
+DIP: 46
 Title: Fixed Maximum APY
 Author(s): aggre
 Contributors:
