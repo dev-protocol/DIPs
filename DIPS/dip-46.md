@@ -16,7 +16,7 @@ License: CC0
 
 ## Sentence Summary
 
-Remove "asset count" from the formula for inflation rate.
+Remove "asset count" from the formula for Dev Protocol's inflation rate.
 
 ## Paragraph Summary
 
@@ -29,9 +29,10 @@ Removing "asset count" from those variables eliminates the risk that a new Marke
 ## Component Summary
 
 - Remove "asset count" from `Policy.rewards` method's interface.
-- The upper limit of APY is fixed.
+- The inflation rate does not change even if asset count increases.
 - Users need new Policies to be proposed/voted to correct the decline in APY.
 - When this DIP is applied, the latest "inflation upper limit by old scheme" is used as the inflation upper limit's initial value.
+  The inflation rate decreases only with increasing deposit (=staking). That inflation curve is similar to the validator rewards from deposits on the Ethereum 2.0 beacon chain.
 
 ## Motivation
 
