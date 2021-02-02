@@ -16,7 +16,7 @@ License: CC0
 
 ## Sentence Summary
 
-Remove "number of assets" from the formula for inflation rate.
+Remove "asset count" from the formula for inflation rate.
 
 ## Paragraph Summary
 
