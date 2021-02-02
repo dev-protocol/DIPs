@@ -31,6 +31,7 @@ Removing "asset count" from those variables eliminates the risk that a new Marke
 - Remove "asset count" from `Policy.rewards` method's interface.
 - The upper limit of APY is fixed.
 - Users need new Policies to be proposed/voted to correct the decline in APY.
+- When this DIP is applied, the latest "inflation upper limit by old scheme" is used as the inflation upper limit's initial value.
 
 ## Motivation
 
@@ -51,6 +52,52 @@ function rewards(uint256 _deposits) external view returns (uint256);
 ##### Actual
 
 https://github.com/dev-protocol/protocol/blob/76e57682e7f9f2e375413b445189a38edc66ff97/contracts/interface/IPolicy.sol#L5-L8
+
+#### Policy for DIP46
+
+```solidity
+contract DIP46 is DIP1 {
+	uint256 private constant basis = 10000000000000000000000000;
+	uint256 private constant power_basis = 10000000000;
+	uint256 private constant mint_per_block = 120000000000000; // **SHOULD REWRITE WITH THE LATEST VALUE**
+
+	constructor(address _config) public DIP1(_config) {}
+
+	function rewards(uint256 _deposits)
+		external
+		view
+		returns (uint256)
+	{
+		uint256 t = ERC20(config().token()).totalSupply();
+		uint256 s = (_deposits.mul(basis)).div(t);
+		uint256 max = mint_per_block;
+		uint256 _d = basis.sub(s);
+		uint256 _p =
+			(
+				(power_basis.mul(12)).sub(
+					s.div((basis.div((power_basis.mul(10)))))
+				)
+			)
+				.div(2);
+		uint256 p = _p.div(power_basis);
+		uint256 rp = p.add(1);
+		uint256 f = _p.sub(p.mul(power_basis));
+		uint256 d1 = _d;
+		uint256 d2 = _d;
+		for (uint256 i = 0; i < p; i++) {
+			d1 = (d1.mul(_d)).div(basis);
+		}
+		for (uint256 i = 0; i < rp; i++) {
+			d2 = (d2.mul(_d)).div(basis);
+		}
+		uint256 g = ((d1.sub(d2)).mul(f)).div(power_basis);
+		uint256 d = d1.sub(g);
+		uint256 mint = max.mul(d);
+		mint = mint.div(basis).div(basis);
+		return mint;
+	}
+}
+```
 
 #### Allocator Contract
 
