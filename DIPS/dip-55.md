@@ -26,7 +26,7 @@ This DIP solves the self-staking problem.
 ## Paragraph Summary
 
 This DIP proposes to set a limit per block on a withdrawable amount for creator rewards. The limit is equal to the withdrawable amount assuming that
-_"the value of multiplied the balance of DEV in the liquidity pools of the exchange protocols by the following values; 12, flatness, and the value of subtracted the ratio of DEV to ETH in the liquidity pools from 1"_ is staked.
+_"the value of multiplied the balance of DEV in the liquidity pools of the exchange protocols by the following values; 12, staking flatness, and the value of subtracted the ratio of DEV to ETH in the liquidity pools from 1"_ is staked.
 
 The liquidity pool used as the basis for the calculation will be the DEV:ETH pool on Uniswap, but this selection process can be managed by governance in the future.
 
@@ -35,7 +35,8 @@ The liquidity pool used as the basis for the calculation will be the DEV:ETH poo
 ## Component Summary
 
 - Set a limit per block on a withdrawable amount for creator rewards.
-  - The limit is equal to the withdrawable amount assuming that _"the value of multiplied the balance of DEV in the liquidity pools of the exchange protocols by the following values; 12, flatness, and the value of subtracted the ratio of DEV to ETH in the liquidity pools from 1"_ is staked.
+  - The limit is equal to the withdrawable amount assuming that _"the value of multiplied the balance of DEV in the liquidity pools of the exchange protocols by the following values; 12, staking flatness, and the value of subtracted the ratio of DEV to ETH in the liquidity pools from 1"_ is staked.
+  - The staking flatness is the ratio of the geometric mean of staking for all authenticated Properties with 0 as 1 and the arithmetic mean of staking for all authenticated Properties.
   - The limit functions only as like vesting, and there is no change in the total creator rewards for each property.
   - Even if a creator or property holder does self-staking to increase his/her creator rewards, he/she will not be able to get a large amount of creator rewards.
   - An efficient way to increase creator rewards is to increase the limit by staking to someone else's Property instead of self-staking.
