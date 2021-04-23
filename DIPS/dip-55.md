@@ -70,16 +70,18 @@ The withdrawal limit per block (`L`) can be calculated as follows:
 
 | Pooled Token | Balance |
 | ------------ | ------- |
-| DEV          | 111,969 |
-| WETH         | 571     |
+| DEV          | 106,506 |
+| WETH         | 451     |
 
-The `GM` (geometric mean of staking for all authenticated Properties with 0 as 1) is `1.28583`, the `AM` (arithmetic mean of staking for all authenticated Properties) is `252.69502`. Assume that APY for creators remains unchanged.
+The `GM` (geometric mean of staking for all authenticated Properties with 0 as 1) is `1.31063`, the `AM` (arithmetic mean of staking for all authenticated Properties) is `293.09670`. Assume that APY for creators remains unchanged.
 
-Results:
+**Results**: 2064.09235 DEV per year
+
+**Formula**:
 
 ```
-T = 111969*(1-(571/111969))*12*1.28583/252.69502 = 6802.13913
-ANNUAL_L = 6802.13913*0.3929 = 2672.560464177
+T = 106506*(1-(451/106506))*12*1.31063/293.09670 = 5690.90807
+ANNUAL_L = 5690.90807*0.3627 = 2064.09235
 ```
 
 #### If DEV value is high
@@ -91,11 +93,13 @@ ANNUAL_L = 6802.13913*0.3929 = 2672.560464177
 
 Assume that GM, AM, and APY for creators remain unchanged.
 
-Results:
+**Results**: 1105.46835 DEV per year
+
+**Formula**:
 
 ```
-T = 58000*(1-(1200/58000))*12*1.28583/252.69502 = 3468.29837
-L = 3468.29837*0.3929 = 1362.694429573
+T = 58000*(1-(1200/58000))*12*1.31063/293.09670 = 3047.88627
+L = 3047.88627*0.3627 = 1105.46835
 ```
 
 #### Further, if staking flatness is high
@@ -105,13 +109,15 @@ L = 3468.29837*0.3929 = 1362.694429573
 | DEV          | 58,000  |
 | WETH         | 1200    |
 
-The `GM` (geometric mean of staking for all authenticated Properties with 0 as 1) is `2.5`, the `AM` (arithmetic mean of staking for all authenticated Properties) is `252.69502`. Assume that APY for creators remains unchanged.
+The `GM` (geometric mean of staking for all authenticated Properties with 0 as 1) is `2.5`, the `AM` (arithmetic mean of staking for all authenticated Properties) is `293.09670`. Assume that APY for creators remains unchanged.
 
-Results:
+**Results**: 2108.65833 DEV per year
+
+**Formula**:
 
 ```
-T = 58000*(1-(1200/58000))*12*2.5/252.69502 = 6743.30661
-L = 6743.30661*0.3929 = 2649.445167069
+T = 58000*(1-(1200/58000))*12*2.5/293.09670 = 5813.78091
+L = 5813.78091*0.3627 = 2108.65833
 ```
 
 ### Proposed Code Updating
