@@ -15,7 +15,7 @@ Replaces: DIP38
 
 This proposal makes up for the shortcomings of DIP38.
 
-The withdrawal limit for creator rewards in DIP38 is tiny. The current geometric mean staking number is about `1.3`, so DIP38 had the problem that the withdrawal limit for creator rewards was significantly smaller than expected.
+The withdrawal limit for creator rewards in DIP38 is tiny. The current geometric mean staking number is about `0.000000000000000009`, so DIP38 had the problem that the withdrawal limit for creator rewards was significantly smaller than expected.
 
 This proposal corrects the withdrawal limit for creator rewards and fluctuates in line with the value of DEV pooled in the liquidity pools and staking flatness.
 
@@ -37,6 +37,7 @@ The liquidity pool used as the basis for the calculation will be the DEV:ETH poo
 - Set a limit per block on a withdrawable amount for creator rewards.
   - The limit is equal to the withdrawable amount assuming that _"the value of multiplied the balance of DEV in the liquidity pools of the exchange protocols by the following values; 12, staking flatness, and the value of subtracted the ratio of DEV to ETH in the liquidity pools from 1"_ is staked.
   - The staking flatness is the ratio of the geometric mean of staking for all authenticated Properties with 0 as 1 and the arithmetic mean of staking for all authenticated Properties.
+  - 1 means 1000000000000000000 in DEV's contract.
   - The limit functions only as like vesting, and there is no change in the total creator rewards for each property.
   - Even if a creator or property holder does self-staking to increase his/her creator rewards, he/she will not be able to get a large amount of creator rewards.
   - An efficient way to increase creator rewards is to increase the limit by staking to someone else's Property instead of self-staking.
