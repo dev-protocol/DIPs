@@ -1,5 +1,5 @@
 ```
-DIP: <# to be assigned>
+DIP: 66
 Title: sTokens, NFTs mirroring DEV staking
 Author(s): aggre
 Contributors:
