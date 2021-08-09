@@ -72,14 +72,16 @@ interface ISTokensManager {
 	 * @param property The address of the Property as the staking destination
 	 * @param amount The amount of the new staking position
 	 * @param price The latest unit price of the cumulative staking reward
-	 * @param historical The historical reward amount
+	 * @param cumulativeReward The cumulative withdrawn reward amount
+	 * @param pendingReward The pending withdrawal reward amount amount
 	 */
 	struct StakingPosition {
 		address owner;
 		address property;
 		uint256 amount;
 		uint256 price;
-		uint256 historical;
+		uint256 cumulativeReward;
+		uint256 pendingReward;
 	}
 
 	/*
@@ -103,14 +105,15 @@ interface ISTokensManager {
 	 * @param amount The new staking amount
 	 * @param price The latest unit price of the cumulative staking reward
 	 * This value equals the 3rd return value of the Lockup.calculateCumulativeRewardPrices
-	 * @param historical The historical reward amount
-	 * This value equals the 1st return value of the Lockup._calculateWithdrawableInterestAmount
+	 * @param cumulativeReward The cumulative withdrawn reward amount
+	 * @param pendingReward The pending withdrawal reward amount amount
 	 */
 	struct UpdateParams {
 		uint256 tokenId;
 		uint256 amount;
 		uint256 price;
-		uint256 historical;
+		uint256 cumulativeReward;
+		uint256 pendingReward;
 	}
 
 	/*
@@ -272,12 +275,14 @@ Related to deposit:
 
 + function deposit(uint256 _tokenId, uint256 _amount) external onlyPositionOwner(_tokenId) onlyAuthenticatedProperty(_property) returns(ISTokensManager.StakingPosition) {
 +	ISTokensManager.StakingPosition position = ISTokensManager.positions(_tokenId);
-+	(uint256 historical, RewardPrices memory prices) = _calculateWithdrawableInterestAmount(position);
++	(uint256 withdrawable, RewardPrices memory prices) = _calculateWithdrawableInterestAmount(position);
 +	updateValues(true, _property, _amount, prices);
 +	require(IDev(config().token()).transferFrom(msg.sender, _property, _amount), "dev transfer failed");
 +	uint256 nextAmount = position.amount.add(_amount);
++	uint256 cumulative = position.cumulative.add(withdrawable);
++	uint256 pending = position.pending.add(withdrawable);
 +	return STokensManager.update(
-+		ISTokensManager.UpdateParams(_tokenId, nextAmount, prices.interest, historical)
++		ISTokensManager.UpdateParams(_tokenId, nextAmount, prices.interest, cumulative, pending)
 +	);
 + }
 
@@ -390,13 +395,14 @@ Related to withdraw:
 +		position.amount >= _amount,
 +		"insufficient tokens staked"
 +	);
-+	RewardPrices memory prices = _withdrawInterest(position);
++	(uint256 value, RewardPrices memory prices) = _withdrawInterest(position);
 +	if (_amount != 0) {
 +		IProperty(position.property).withdraw(msg.sender, _amount);
 +	}
 +	updateValues(false, position.property, _amount, prices);
++	uint256 cumulative = position.cumulative.add(value);
 +	return STokensManager.update(
-+		ISTokensManager.UpdateParams(_tokenId, position.amount.sub(_amount), prices.interest, historical)
++		ISTokensManager.UpdateParams(_tokenId, position.amount.sub(_amount), prices.interest, cumulative, 0)
 +	);
 + }
 
@@ -417,7 +423,7 @@ function withdraw(address _property, uint256 _amount) external {
 - function _withdrawInterest(address _property)
 + function _withdrawInterest(ISTokensManager.StakingPosition calldata _position)
 	private
-	returns (RewardPrices memory _prices)
+	returns (uint256 _value, RewardPrices memory _prices)
 {
 	(
 		uint256 value,
@@ -436,7 +442,7 @@ function withdraw(address _property, uint256 _amount) external {
 		"dev mint failed"
 	);
 	update();
-	return prices;
+	return (value, prices);
 }
 
 function _calculateWithdrawableInterestAmount(
@@ -451,7 +457,7 @@ function _calculateWithdrawableInterestAmount(
 		return (0, RewardPrices(0, 0, 0, 0));
 	}
 -	uint256 pending = getStoragePendingInterestWithdrawal(_property, _user);
-+	uint256 pending = _position.historical;
++	uint256 pending = _position.pending;
 -	uint256 legacy = __legacyWithdrawableInterestAmount(_property, _user);
 	(
 		uint256 amount,
