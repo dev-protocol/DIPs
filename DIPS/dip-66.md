@@ -18,7 +18,7 @@ License: CC0
 
 ## Sentence Summary
 
-A proposal for ERC721 tokens mirroring DEV staking, called sTokens.
+A proposal for ERC-721 tokens mirroring DEV staking, called sTokens.
 
 ## Paragraph Summary
 
@@ -32,18 +32,18 @@ sTokens improves staking composability.
 
 - **[Uniqueness]**
   sTokens is a unique NFT for each staking.
-- **[NFT, not ERC20]**
+- **[NFT, not ERC-20]**
   By staking 10 DEV on the Property tokens “Alice,” the staker gets 1 sAlice. By staking 1,000 DEV on the Property tokens “Bob,” the staker gets 1 sBob.
 - **[Reward]**
   sTokens holders earn staking rewards based on their respective sTokens.
 - **[Update]**
   sTokens change the state by withdrawing or adding staking. There is no burn.
 - **[Bridge]**
-  In some cases, ERC20 is preferable to NFT. In that case, a user can extend the composability by creating a third-party bridge contract for NFT<>ERC20.
+  In some cases, ERC-20 is preferable to NFT. In that case, a user can extend the composability by creating a third-party bridge contract for NFT<>ERC-20.
 
 ## Motivation
 
-DEV staking users can prove that they are staking by the function in the Lockup contract on Dev Protocol. However, the function is not a standardized interface such as ERC721 or ERC20, which creates an inconvenient situation for composability.
+DEV staking users can prove that they are staking by the function in the Lockup contract on Dev Protocol. However, the function is not a standardized interface such as ERC-721 or ERC-20, which creates an inconvenient situation for composability.
 
 ## Specification
 
