@@ -147,14 +147,6 @@ interface ISTokensManager {
 	 */
 	function positions(uint256 _tokenId) external view returns(StakingPosition position);
 }
-
-interface ISTokensManagerStorage {
-	function getStoragePositionsV1(uint256 _tokenId) public view returns(ISTokensManager.StakingPosition);
-
-	function setStoragePositionsV1(uint256 _tokenId, ISTokensManager.StakingPosition calldata _position) internal returns(ISTokensManager.StakingPosition);
-
-	function getStoragePositionsV1Key(uint256 _tokenId, ISTokensManager.StakingPosition calldata _position) internal returns(bytes32);
-}
 ```
 
 Since it is not gas efficient to hold the `tokenURI` as a character string, define STokensDescriptor as follows and dynamically generate the URI string.
@@ -213,11 +205,7 @@ contract STokensDescriptor {
 STokensManager inherits the ERC-721 interfaces.
 
 ```solidity
-contract STokensManagerStorage is ISTokensManagerStorage {
-	// Implementations...
-}
-
-contract STokensManager is ISTokensManager, STokensManagerStorage, STokensDescriptor, ERC721, ERC721Metadata {
+contract STokensManager is ISTokensManager, STokensDescriptor, ERC721, ERC721Metadata {
 	function tokenURI(uint256 _tokenId) external view returns (string){
 		return getTokenURI(getStoragePositionsV1(_tokenId));
 	}
@@ -225,6 +213,10 @@ contract STokensManager is ISTokensManager, STokensManagerStorage, STokensDescri
 	// Implementations...
 }
 ```
+
+#### Upgradability
+
+STokensManager implements updatablity according to [EIP-1967](https://eips.ethereum.org/EIPS/eip-1967).
 
 #### The NFT specific data of STokensManager is the below:
 
