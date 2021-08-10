@@ -33,7 +33,7 @@ sTokens improves staking composability.
 - **[Uniqueness]**
   sTokens is a unique NFT for each staking.
 - **[Certificate of Staking]**
-  A sTokens holder is considered to be the person who runned the staking stored in sTokens. If you transfer sTokens to another person, that right will also be transferred.
+  A sTokens holder is considered to be the person who ran the staking stored in sTokens. If you transfer sTokens to another person, that right will also be transferred.
 
   sTokens stores the values of staking destination, staking amount, last reward unit price, cumulative reward amount, and pending reward amount into each NFT.
 
