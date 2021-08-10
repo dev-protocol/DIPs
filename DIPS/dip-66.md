@@ -32,10 +32,10 @@ sTokens improves staking composability.
 
 - **[Uniqueness]**
   sTokens is a unique NFT for each staking.
+- **[Certificate of Staking]**
+  A sTokens holder is the staking right holder in the status stored by sTokens. Therefore, sTokens holders will earn staking rewards. If you transfer sTokens to another person, that right will also be transferred.
 - **[NFT, not ERC-20]**
   By staking 10 DEV on the Property tokens “Alice,” the staker gets 1 sAlice. By staking 1,000 DEV on the Property tokens “Bob,” the staker gets 1 sBob.
-- **[Reward]**
-  sTokens holders earn staking rewards based on their respective sTokens.
 - **[Update]**
   sTokens change the state by withdrawing or adding staking. There is no burn.
 - **[Bridge]**
