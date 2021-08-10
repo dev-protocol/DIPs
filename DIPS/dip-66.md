@@ -58,6 +58,10 @@ sTokens are automatically issued upon staking and can be updated upon unstake.
 - **[STokensManager]**
   A new contract to manage minting and updating sTokens, the deployed address by the local variables of Lockup Contract have been retained.
 
+### Why not ERC-20?
+
+Dev Protocol staking rewards change the rate of return at unpredictable timings as third parties increase or decrease staking. To implement that property, Dev Protocol handles a cumulative sum of the reward unit prices that continue to be increased and a snapshot of that cumulative sum at the time for each staking. The staking rewards are unique, and fungible tokens are inconvenient to retain that unique data. This is similar to why Uniswap v3's liquidity tokens are now NFTs instead of ERC-20.
+
 ### Proposed Code
 
 #### STokensManager
