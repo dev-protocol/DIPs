@@ -161,7 +161,7 @@ Since it is not gas efficient to hold the `tokenURI` as a character string, defi
 
 ```solidity
 contract STokensDescriptor {
-	function getTokenURI(StakingPosition memory _position) public pure returns (string memory) {
+	function getTokenURI(StakingPosition memory _position) internal pure returns (string memory) {
 		string memory name = string(
 			abi.encodePacked(
 				'Dev Protocol sTokens - ',
