@@ -93,13 +93,13 @@ interface ISTokensManager {
 
 	/*
 	 * @dev Struct to declares staking rewards.
-	 * @param entierReward The reward amount of adding the cumulative withdrawn amount
+	 * @param entireReward The reward amount of adding the cumulative withdrawn amount
 	 to the withdrawable amount
 	 * @param cumulativeReward The cumulative withdrawn reward amount
 	 * @param withdrawableReward The withdrawable reward amount
 	 */
 	struct Rewards {
-		uint256 entierReward;
+		uint256 entireReward;
 		uint256 cumulativeReward;
 		uint256 withdrawableReward;
 	}
