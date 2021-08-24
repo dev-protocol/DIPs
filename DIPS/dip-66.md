@@ -92,6 +92,19 @@ interface ISTokensManager {
 	}
 
 	/*
+	 * @dev Struct to declares staking rewards.
+	 * @param entierReward The reward amount of adding the cumulative withdrawn amount
+	 to the withdrawable amount
+	 * @param cumulativeReward The cumulative withdrawn reward amount
+	 * @param withdrawableReward The withdrawable reward amount
+	 */
+	struct Rewards {
+		uint256 entierReward;
+		uint256 cumulativeReward;
+		uint256 withdrawableReward;
+	}
+
+	/*
 	 * @dev Struct to declares mint parameters.
 	 * @param owner The address of the owner of the new staking position
 	 * @param property The address of the Property as the staking destination
@@ -146,6 +159,13 @@ interface ISTokensManager {
 	 * @return position The results of StakingPosition
 	 */
 	function positions(uint256 _tokenId) external view returns(StakingPosition position);
+
+	/*
+	 * @dev Gets the reward status of the staking position.
+	 * @param _tokenId The ID of the staking position
+	 * @return rewards The results of Rewards
+	 */
+	function rewards(uint256 _tokenId) external view returns(Rewards rewards);
 }
 ```
 
