@@ -662,6 +662,42 @@ _Legacy methods and the latest method use common storage, so it will be implemen
 
 ```
 
+Related to migration:
+
+```diff
++ function migrateToSTokens(address _property) external returns(ISTokensManager.StakingPosition) {
++	uint256 amount = getStorageValue(_property, msg.sender);
++	require(amount > 0, "not staked");
++	(
++		uint256 value,
++		RewardPrices memory prices
++	) = _calculateWithdrawableInterestAmount4Legacy(_property, msg.sender);
++	setStoragePendingInterestWithdrawal(
++		_property,
++		msg.sender,
++		0
++	);
++	setStorageValue(_property, msg.sender, 0);
++	uint256 price = getStorageLastStakedInterestPrice(
++		_property,
++		msg.sender
++	);
++	uint256 pending = getStoragePendingInterestWithdrawal(
++		_property,
++		msg.sender
++	);
++	(
++		uint256 tokenId,
++		ISTokensManager.StakingPosition memory position
++	) = STokensManager.mint(
++		ISTokensManager.MintParams(msg.sender, _property, amount, price)
++	);
++	rerurn STokensManager.update(
++		ISTokensManager.UpdateParams(tokenId, amount, price, amount, pending)
++	);
++ }
+```
+
 ### Test Cases
 
 #### STokensManager
