@@ -199,7 +199,7 @@ contract STokensDescriptor {
 				_position.amount,
 				' DEV',
 				' - ',
-				_position.historical
+				_position.cumulativeReward
 			)
 		);
 		string memory description = string(
@@ -316,8 +316,8 @@ Related to deposit:
 +	updateValues(true, _property, _amount, prices);
 +	require(IDev(config().token()).transferFrom(msg.sender, _property, _amount), "dev transfer failed");
 +	uint256 nextAmount = position.amount.add(_amount);
-+	uint256 cumulative = position.cumulative.add(withdrawable);
-+	uint256 pending = position.pending.add(withdrawable);
++	uint256 cumulative = position.cumulativeReward.add(withdrawable);
++	uint256 pending = position.pendingReward.add(withdrawable);
 + 	emit Lockedup(_from, _property, _value);
 +	return STokensManager.update(
 +		ISTokensManager.UpdateParams(_tokenId, nextAmount, prices.interest, cumulative, pending)
@@ -438,7 +438,7 @@ Related to withdraw:
 +		IProperty(position.property).withdraw(msg.sender, _amount);
 +	}
 +	updateValues(false, position.property, _amount, prices);
-+	uint256 cumulative = position.cumulative.add(value);
++	uint256 cumulative = position.cumulativeReward.add(value);
 +	return STokensManager.update(
 +		ISTokensManager.UpdateParams(_tokenId, position.amount.sub(_amount), prices.interest, cumulative, 0)
 +	);
@@ -505,7 +505,7 @@ function _calculateWithdrawableInterestAmount(
 		return (0, RewardPrices(0, 0, 0, 0));
 	}
 -	uint256 pending = getStoragePendingInterestWithdrawal(_property, _user);
-+	uint256 pending = _position.pending;
++	uint256 pending = _position.pendingReward;
 -	uint256 legacy = __legacyWithdrawableInterestAmount(_property, _user);
 	(
 		uint256 amount,
