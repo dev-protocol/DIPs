@@ -668,10 +668,6 @@ Related to migration:
 + function migrateToSTokens(address _property) external returns(ISTokensManager.StakingPosition) {
 +	uint256 amount = getStorageValue(_property, msg.sender);
 +	require(amount > 0, "not staked");
-+	(
-+		uint256 value,
-+		RewardPrices memory prices
-+	) = _calculateWithdrawableInterestAmount4Legacy(_property, msg.sender);
 +	setStoragePendingInterestWithdrawal(
 +		_property,
 +		msg.sender,
