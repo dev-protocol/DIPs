@@ -316,7 +316,7 @@ Related to deposit:
 +	_;
 + }
 
-+ function deposit(address _property, uint256 _amount) external onlyAuthenticatedProperty(_property) returns(ISTokensManager.StakingPosition) {
++ function depositToProperty(address _property, uint256 _amount) external onlyAuthenticatedProperty(_property) returns(ISTokensManager.StakingPosition) {
 +	RewardPrices memory prices = calculateCumulativeRewardPrices();
 +	updateValues(true, _property, _amount, prices);
 +	require(IDev(config().token()).transferFrom(msg.sender, _property, _amount), "dev transfer failed");
@@ -326,7 +326,7 @@ Related to deposit:
 +	);
 + }
 
-+ function deposit(uint256 _tokenId, uint256 _amount) external onlyPositionOwner(_tokenId) onlyAuthenticatedProperty(_property) returns(ISTokensManager.StakingPosition) {
++ function depositToPosition(uint256 _tokenId, uint256 _amount) external onlyPositionOwner(_tokenId) onlyAuthenticatedProperty(_property) returns(ISTokensManager.StakingPosition) {
 +	ISTokensManager.StakingPosition position = ISTokensManager.positions(_tokenId);
 +	(uint256 withdrawable, RewardPrices memory prices) = _calculateWithdrawableInterestAmount(position);
 +	updateValues(true, _property, _amount, prices);
@@ -443,7 +443,7 @@ function updateValues(
 Related to withdraw:
 
 ```diff
-+ function withdraw(uint256 _tokenId, uint256 _amount) external onlyPositionOwner(_tokenId) returns(ISTokensManager.StakingPosition) {
++ function withdrawByPosition(uint256 _tokenId, uint256 _amount) external onlyPositionOwner(_tokenId) returns(ISTokensManager.StakingPosition) {
 +	ISTokensManager.StakingPosition position = ISTokensManager.positions(_tokenId);
 +	require(
 +		position.amount >= _amount,
@@ -459,6 +459,16 @@ Related to withdraw:
 +		ISTokensManager.UpdateParams(_tokenId, position.amount.sub(_amount), prices.interest, cumulative, 0)
 +	);
 + }
+
++ function calculateWithdrawableInterestAmountByPosition(
++	uint256 _tokenId,
++	address _user
++ ) public view returns (uint256) {
++	ISTokensManager.StakingPosition position = ISTokensManager.positions(_tokenId);
++	(uint256 amount, ) = _calculateWithdrawableInterestAmount(_position);
++	return amount;
++ }
+
 
 function withdraw(address _property, uint256 _amount) external {
 	require(
