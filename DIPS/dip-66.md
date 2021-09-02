@@ -74,6 +74,39 @@ ISTokensManager declares an interface for the STokensManager contract.
 ```solidity
 interface ISTokensManager {
 	/*
+	 * @dev Event emitted when a token is minted.
+	 * @param tokenId The ID of the created new staking position
+	 * @param owner The address of the owner of the new staking position
+	 * @param property The address of the Property as the staking destination
+	 * @param amount The amount of the new staking position
+	 * @param price The latest unit price of the cumulative staking reward
+	 */
+	event Minted(
+		uint256 tokenId,
+		address owner,
+		address property,
+		uint256 amount,
+		uint256 price
+	);
+
+	/*
+	 * @dev Event emitted when a token is updated.
+	 * @param tokenId The ID of the updated staking position
+	 * @param amount The new staking amount
+	 * @param price The latest unit price of the cumulative staking reward
+	 * This value equals the 3rd return value of the Lockup.calculateCumulativeRewardPrices
+	 * @param cumulativeReward The cumulative withdrawn reward amount
+	 * @param pendingReward The pending withdrawal reward amount amount
+	 */
+	event Updated(
+		uint256 tokenId,
+		uint256 amount,
+		uint256 price,
+		uint256 cumulativeReward,
+		uint256 pendingReward
+	);
+
+	/*
 	 * @dev Struct to declares a staking position.
 	 * @param owner The address of the owner of the new staking position
 	 * @param property The address of the Property as the staking destination
@@ -287,6 +320,7 @@ Related to deposit:
 +	RewardPrices memory prices = calculateCumulativeRewardPrices();
 +	updateValues(true, _property, _amount, prices);
 +	require(IDev(config().token()).transferFrom(msg.sender, _property, _amount), "dev transfer failed");
++ 	emit Lockedup(_from, _property, _value);
 +	return STokensManager.mint(
 +		ISTokensManager.MintParams(msg.sender, _property, _amount, prices.interest)
 +	);
@@ -300,6 +334,7 @@ Related to deposit:
 +	uint256 nextAmount = position.amount.add(_amount);
 +	uint256 cumulative = position.cumulative.add(withdrawable);
 +	uint256 pending = position.pending.add(withdrawable);
++ 	emit Lockedup(_from, _property, _value);
 +	return STokensManager.update(
 +		ISTokensManager.UpdateParams(_tokenId, nextAmount, prices.interest, cumulative, pending)
 +	);
