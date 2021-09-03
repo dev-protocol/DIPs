@@ -90,6 +90,22 @@ interface ISTokensManager {
 	);
 
 	/*
+	 * @dev Event emitted when a token is minted.
+	 * @param tokenId The ID of the created new staking position
+	 * @param owner The address of the owner of the new staking position
+	 * @param property The address of the Property as the staking destination
+	 * @param amount The amount of the new staking position
+	 * @param price The latest unit price of the cumulative staking reward
+	 */
+	event Minted(
+		uint256 tokenId,
+		address owner,
+		address property,
+		uint256 amount,
+		uint256 price
+	);
+
+	/*
 	 * @dev Event emitted when a token is updated.
 	 * @param tokenId The ID of the updated staking position
 	 * @param amount The new staking amount
