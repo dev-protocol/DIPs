@@ -74,6 +74,55 @@ ISTokensManager declares an interface for the STokensManager contract.
 ```solidity
 interface ISTokensManager {
 	/*
+	 * @dev Event emitted when a token is minted.
+	 * @param tokenId The ID of the created new staking position
+	 * @param owner The address of the owner of the new staking position
+	 * @param property The address of the Property as the staking destination
+	 * @param amount The amount of the new staking position
+	 * @param price The latest unit price of the cumulative staking reward
+	 */
+	event Minted(
+		uint256 tokenId,
+		address owner,
+		address property,
+		uint256 amount,
+		uint256 price
+	);
+
+	/*
+	 * @dev Event emitted when a token is minted.
+	 * @param tokenId The ID of the created new staking position
+	 * @param owner The address of the owner of the new staking position
+	 * @param property The address of the Property as the staking destination
+	 * @param amount The amount of the new staking position
+	 * @param price The latest unit price of the cumulative staking reward
+	 */
+	event Minted(
+		uint256 tokenId,
+		address owner,
+		address property,
+		uint256 amount,
+		uint256 price
+	);
+
+	/*
+	 * @dev Event emitted when a token is updated.
+	 * @param tokenId The ID of the updated staking position
+	 * @param amount The new staking amount
+	 * @param price The latest unit price of the cumulative staking reward
+	 * This value equals the 3rd return value of the Lockup.calculateCumulativeRewardPrices
+	 * @param cumulativeReward The cumulative withdrawn reward amount
+	 * @param pendingReward The pending withdrawal reward amount amount
+	 */
+	event Updated(
+		uint256 tokenId,
+		uint256 amount,
+		uint256 price,
+		uint256 cumulativeReward,
+		uint256 pendingReward
+	);
+
+	/*
 	 * @dev Struct to declares a staking position.
 	 * @param owner The address of the owner of the new staking position
 	 * @param property The address of the Property as the staking destination
@@ -89,6 +138,19 @@ interface ISTokensManager {
 		uint256 price;
 		uint256 cumulativeReward;
 		uint256 pendingReward;
+	}
+
+	/*
+	 * @dev Struct to declares staking rewards.
+	 * @param entireReward The reward amount of adding the cumulative withdrawn amount
+	 to the withdrawable amount
+	 * @param cumulativeReward The cumulative withdrawn reward amount
+	 * @param withdrawableReward The withdrawable reward amount
+	 */
+	struct Rewards {
+		uint256 entireReward;
+		uint256 cumulativeReward;
+		uint256 withdrawableReward;
 	}
 
 	/*
@@ -146,6 +208,13 @@ interface ISTokensManager {
 	 * @return position The results of StakingPosition
 	 */
 	function positions(uint256 _tokenId) external view returns(StakingPosition position);
+
+	/*
+	 * @dev Gets the reward status of the staking position.
+	 * @param _tokenId The ID of the staking position
+	 * @return rewards The results of Rewards
+	 */
+	function rewards(uint256 _tokenId) external view returns(Rewards rewards);
 }
 ```
 
@@ -162,7 +231,7 @@ contract STokensDescriptor {
 				_position.amount,
 				' DEV',
 				' - ',
-				_position.historical
+				_position.cumulativeReward
 			)
 		);
 		string memory description = string(
@@ -263,23 +332,25 @@ Related to deposit:
 +	_;
 + }
 
-+ function deposit(address _property, uint256 _amount) external onlyAuthenticatedProperty(_property) returns(ISTokensManager.StakingPosition) {
++ function depositToProperty(address _property, uint256 _amount) external onlyAuthenticatedProperty(_property) returns(ISTokensManager.StakingPosition) {
 +	RewardPrices memory prices = calculateCumulativeRewardPrices();
 +	updateValues(true, _property, _amount, prices);
 +	require(IDev(config().token()).transferFrom(msg.sender, _property, _amount), "dev transfer failed");
++ 	emit Lockedup(_from, _property, _value);
 +	return STokensManager.mint(
 +		ISTokensManager.MintParams(msg.sender, _property, _amount, prices.interest)
 +	);
 + }
 
-+ function deposit(uint256 _tokenId, uint256 _amount) external onlyPositionOwner(_tokenId) onlyAuthenticatedProperty(_property) returns(ISTokensManager.StakingPosition) {
++ function depositToPosition(uint256 _tokenId, uint256 _amount) external onlyPositionOwner(_tokenId) onlyAuthenticatedProperty(_property) returns(ISTokensManager.StakingPosition) {
 +	ISTokensManager.StakingPosition position = ISTokensManager.positions(_tokenId);
 +	(uint256 withdrawable, RewardPrices memory prices) = _calculateWithdrawableInterestAmount(position);
 +	updateValues(true, _property, _amount, prices);
 +	require(IDev(config().token()).transferFrom(msg.sender, _property, _amount), "dev transfer failed");
 +	uint256 nextAmount = position.amount.add(_amount);
-+	uint256 cumulative = position.cumulative.add(withdrawable);
-+	uint256 pending = position.pending.add(withdrawable);
++	uint256 cumulative = position.cumulativeReward.add(withdrawable);
++	uint256 pending = position.pendingReward.add(withdrawable);
++ 	emit Lockedup(_from, _property, _value);
 +	return STokensManager.update(
 +		ISTokensManager.UpdateParams(_tokenId, nextAmount, prices.interest, cumulative, pending)
 +	);
@@ -388,7 +459,7 @@ function updateValues(
 Related to withdraw:
 
 ```diff
-+ function withdraw(uint256 _tokenId, uint256 _amount) external onlyPositionOwner(_tokenId) returns(ISTokensManager.StakingPosition) {
++ function withdrawByPosition(uint256 _tokenId, uint256 _amount) external onlyPositionOwner(_tokenId) returns(ISTokensManager.StakingPosition) {
 +	ISTokensManager.StakingPosition position = ISTokensManager.positions(_tokenId);
 +	require(
 +		position.amount >= _amount,
@@ -399,11 +470,21 @@ Related to withdraw:
 +		IProperty(position.property).withdraw(msg.sender, _amount);
 +	}
 +	updateValues(false, position.property, _amount, prices);
-+	uint256 cumulative = position.cumulative.add(value);
++	uint256 cumulative = position.cumulativeReward.add(value);
 +	return STokensManager.update(
 +		ISTokensManager.UpdateParams(_tokenId, position.amount.sub(_amount), prices.interest, cumulative, 0)
 +	);
 + }
+
++ function calculateWithdrawableInterestAmountByPosition(
++	uint256 _tokenId,
++	address _user
++ ) public view returns (uint256) {
++	ISTokensManager.StakingPosition position = ISTokensManager.positions(_tokenId);
++	(uint256 amount, ) = _calculateWithdrawableInterestAmount(_position);
++	return amount;
++ }
+
 
 function withdraw(address _property, uint256 _amount) external {
 	require(
@@ -456,7 +537,7 @@ function _calculateWithdrawableInterestAmount(
 		return (0, RewardPrices(0, 0, 0, 0));
 	}
 -	uint256 pending = getStoragePendingInterestWithdrawal(_property, _user);
-+	uint256 pending = _position.pending;
++	uint256 pending = _position.pendingReward;
 -	uint256 legacy = __legacyWithdrawableInterestAmount(_property, _user);
 	(
 		uint256 amount,
@@ -595,6 +676,38 @@ _Legacy methods and the latest method use common storage, so it will be implemen
 +	);
 + }
 
+```
+
+Related to migration:
+
+```diff
++ function migrateToSTokens(address _property) external returns(ISTokensManager.StakingPosition) {
++	uint256 amount = getStorageValue(_property, msg.sender);
++	require(amount > 0, "not staked");
++	setStoragePendingInterestWithdrawal(
++		_property,
++		msg.sender,
++		0
++	);
++	setStorageValue(_property, msg.sender, 0);
++	uint256 price = getStorageLastStakedInterestPrice(
++		_property,
++		msg.sender
++	);
++	uint256 pending = getStoragePendingInterestWithdrawal(
++		_property,
++		msg.sender
++	);
++	(
++		uint256 tokenId,
++		ISTokensManager.StakingPosition memory position
++	) = STokensManager.mint(
++		ISTokensManager.MintParams(msg.sender, _property, amount, price)
++	);
++	rerurn STokensManager.update(
++		ISTokensManager.UpdateParams(tokenId, amount, price, amount, pending)
++	);
++ }
 ```
 
 ### Test Cases
