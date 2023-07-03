@@ -91,7 +91,7 @@ returns (bool _res) {
 
 ### Manage total locked for each payload
 
-```solidity!
+```solidity
 mapping(address => mapping(bytes32 => uint245)) totalLockedOf;
 
 function onBeforeMint(
@@ -120,7 +120,7 @@ function onBeforeUpdate(
 
 ### Time-locked positions
 
-```solidity!
+```solidity
 mapping(address => mapping(bytes32 => uint245)) lockedPeriodOf;
 uint256 public durationSec = 2628000;
 
