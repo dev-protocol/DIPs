@@ -1,1 +1,4 @@
 node_modules
+
+# Use `npm` as a package manager
+yarn.lock
